@@ -1,0 +1,15 @@
+language: cpp
+sudo: false
+compiler:
+  - gcc
+before_script:
+  - mkdir ../build
+  - cd ../build
+script:
+  - cmake ../mp2-lab4-cluster/Злобин
+  - make -j
+  - cd ./base_test/
+  - ls -la
+  - ./postfix_test
+notifications:
+  email: false
