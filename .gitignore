@@ -31,7 +31,6 @@
 .vs/ProjectSettings.json
 .vs/slnx.sqlite
 .vs/VSWorkspaceState.json
-*.vcxproj
 *.ipch
 *.db
 *.db-wal
