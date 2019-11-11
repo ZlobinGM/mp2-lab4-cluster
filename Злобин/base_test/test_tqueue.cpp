@@ -16,6 +16,12 @@ TEST(TQueue, throws_when_create_queue_with_negative_length)
 	ASSERT_ANY_THROW(TQueue<int> qu(-5));
 }
 
+TEST(TQueue, can_get_size)
+{
+	TQueue<int> qu(3);
+	EXPECT_EQ(3, qu.Size());
+}
+
 TEST(TQueue, can_push_to_queue)
 {
 	TQueue<int> qu(3);
@@ -45,6 +51,42 @@ TEST(TQueue, throw_when_pop_from_empty_queue)
 	TQueue<int> qu(3);
 
 	ASSERT_ANY_THROW(qu.Pop());
+}
+
+TEST(TQueue, can_push_to_reuse_space_of_queue)
+{
+	TQueue<int> qu(3);
+	qu.Push(1);
+	qu.Push(2);
+	qu.Push(3);
+	qu.Pop();
+	qu.Pop();
+
+	ASSERT_NO_THROW(qu.Push(4));
+}
+
+TEST(TQueue, can_pop_from_reuse_space_of_queue)
+{
+	TQueue<int> qu(3);
+	qu.Push(1);
+	qu.Push(2);
+	qu.Push(3);
+	qu.Pop();
+	qu.Pop();
+	qu.Push(4);
+	qu.Push(5);
+	qu.Pop();
+
+	ASSERT_NO_THROW(qu.Pop);
+}
+
+TEST(TQueue, can_get_length)
+{
+	TQueue<int> qu(3);
+	qu.Push(1);
+	qu.Push(2);
+
+	EXPECT_EQ(2, qu.Length());
 }
 
 TEST(TQueue, can_get_begin_of_queue)

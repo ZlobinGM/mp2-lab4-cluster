@@ -3,20 +3,13 @@
 
 #include "stack.h"
 
-const int MaxQueueSize = 100;
-
 template <class T>
 class TQueue : public TStack
 {
 	int bottom;
 	int length;
 public:
-	TQueue(int _size = MaxQueueSize) : top(-1), bottom(0), length(0) {
-		size = _size;
-		if ((size < 1) || (size > MaxQueueSize))
-			throw "too_large_or_negative_length";
-		pMem = new T[size];
-	}
+	TQueue(int _size) : TStack(_size), bottom(0), length(0) {}
 	~TQueue() { delete[] pMem; }
 
 	bool IsEmpty(void) const { return length == 0; }
@@ -44,6 +37,7 @@ public:
 		return pMem[top];
 	}
 	int Size(void) { return size; }
+	int Length(void) { return length; }
 };
 
 #endif
