@@ -5,9 +5,9 @@
 
 class Computer
 {
-	int cores;						// сколько ядер
-	int free_cores;					// сколько ядер свободно
-	int* tasks_in_progress;			// какие задачи выполняются
+	int cores;						// СЃРєРѕР»СЊРєРѕ СЏРґРµСЂ
+	int free_cores;					// СЃРєРѕР»СЊРєРѕ СЏРґРµСЂ СЃРІРѕР±РѕРґРЅРѕ
+	int* tasks_in_progress;			// РєР°РєРёРµ Р·Р°РґР°С‡Рё РІС‹РїРѕР»РЅСЏСЋС‚СЃСЏ
 public:
 	Computer(int _cores = 1) :cores(_cores), free_cores(_cores) {
 		tasks_in_progress = new int[_cores];
@@ -17,7 +17,7 @@ public:
 
 	int GetCores() { return cores; }
 	int GetFreeCores() { return free_cores; }
-	void LoudUpCores(const Task& _task) {					// поставить задачу на выполнение
+	void LoudUpCores(Task& _task) {					// РїРѕСЃС‚Р°РІРёС‚СЊ Р·Р°РґР°С‡Сѓ РЅР° РІС‹РїРѕР»РЅРµРЅРёРµ
 		for (int i = 0; i < cores; i++)
 		{
 			if (!(_task.GetCores() && free_cores)) return;
@@ -28,14 +28,17 @@ public:
 			}
 		}
 	}
-	void FreeCoresOff(const Task& _task) {					// освободить ядра, выполнявшие полученную задачу 
+	int FreeCoresOff(Task& _task) {					// РѕСЃРІРѕР±РѕРґРёС‚СЊ СЏРґСЂР°, РІС‹РїРѕР»РЅСЏРІС€РёРµ РїРѕР»СѓС‡РµРЅРЅСѓСЋ Р·Р°РґР°С‡Сѓ 
+		int cores_are_free = 0;
 		for (int i = 0; i < cores; i++)
 		{
 			if (tasks_in_progress[i] == _task.GetIndex()) {
 				tasks_in_progress[i] = 0;
 				free_cores++;
+				cores_are_free++;
 			}
 		}
+		return cores_are_free;
 	}
 };
 

@@ -36,3 +36,5 @@
 *.db-wal
 *.db-shm
 *.opendb
+*.json
+*.cmake
