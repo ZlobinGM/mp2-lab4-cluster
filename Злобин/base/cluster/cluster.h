@@ -9,7 +9,7 @@
 using namespace std;
 
 const int EachQueueSize = 20;
-
+const int WaitForMoveForvardInQueue = 20;
 
 class Cluster
 {
@@ -28,6 +28,7 @@ class Cluster
 
 	int NoMoreActual();								// сколько задач, находясь в очереди, стали неактуальны по времени исполнения
 	void SetTasksInProgress();						// назначить задание на исполнение
+	void MoveForwardInQueue();
 public:
 	Cluster(vector<int> _cores_of_computers, int _priorities, int _total_tacts);
 

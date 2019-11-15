@@ -33,6 +33,7 @@ public:
 	void ChangePriority() {									// уменьшить приоритет (нужно для избежания вечного застоя в очереди)
 		if (priority == 0) return;
 		priority--;
+		if (priority < 0) throw "not_correct_priority";
 	}
 };
 

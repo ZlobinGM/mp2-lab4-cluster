@@ -41,6 +41,23 @@ void Cluster::SetTasksInProgress()
 	}
 }
 
+void Cluster::MoveForwardInQueue()
+{
+	for (int i = 1; i < tasks.size(); i++)
+	{
+		if (tasks[i - 1].IsFull() || tasks[i].IsEmpty())
+			continue;
+		while (!tasks[i - 1].IsFull() && !tasks[i].IsEmpty() &&
+			tasks[i].Begin().GetCreateTime() + WaitForMoveForvardInQueue <= current_tact)
+		{
+			Task tmp = tasks[i].Pop();
+			tmp.ResetCreateTime(current_tact);
+			tmp.ChangePriority();
+			tasks[i].Push(tmp);
+		}
+	}
+}
+
 Cluster::Cluster(vector<int> _cores_of_computers, int _priorities, int _total_tacts) : completed(0), uncompleted(0), refused(0),
 total_cores(0), total_tacts(_total_tacts), current_tact(0)
 {
@@ -61,6 +78,7 @@ int Cluster::SetTasks(vector<Task> _tasks)
 {
 	int refused_on_set = 0;
 	refused_on_set += NoMoreActual();
+	MoveForwardInQueue();
 
 	for each (Task _task in _tasks)
 	{

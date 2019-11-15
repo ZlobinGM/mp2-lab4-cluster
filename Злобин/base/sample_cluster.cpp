@@ -14,7 +14,7 @@ int main()
 	setlocale(LC_ALL, "Russian");
 
 	int size_cluster, max_size = 30;
-	cout << "Введите размер кластера x. 0 < x < " << max_size << " : ";
+	cout << "Введите размер кластера x. 0 < x < " << max_size + 1 << " : ";
 	do	{
 		cin >> size_cluster;
 	} while (size_cluster < 1 || size_cluster > max_size);
@@ -24,7 +24,7 @@ int main()
 	for (int i = 0; i < size_cluster; i++)
 	{
 		cout << "Введите число ядер " << i + 1 << "-го компьютера кластера x"
-			<< i + 1 << ". 0 < x" << i + 1 << " < " << max_size << " : ";
+			<< i + 1 << ". 0 < x" << i + 1 << " < " << max_size + 1 << " : ";
 		do {
 			cin >> _tmp;
 		} while (_tmp < 1 || _tmp > max_size);
@@ -33,16 +33,27 @@ int main()
 	}
 
 	int priority, max_priority = 10;
-	cout << "Введите число различных по приоритету видов задач x. 0 < x < " << max_priority << " : ";
+	cout << "Введите число различных по приоритету видов задач x. 0 < x < " << max_priority + 1 << " : ";
 	do {
 		cin >> priority;
 	} while (priority < 1 || priority > max_priority);
 
-	int tacts, max_tacts = 1000;
-	cout << "Введите число тактов x. 0 < x < " << max_tacts << " : ";
+	int tacts, min_tacts = 100, max_tacts = 1000;
+	cout << "Введите число тактов x. " << min_tacts - 1 << " < x < " << max_tacts + 1 << " : ";
 	do {
 		cin >> tacts;
-	} while (tacts < 1 || tacts > max_tacts);
+	} while (tacts < min_tacts || tacts > max_tacts);
+
+	double large_cores_probability = 0, large_tacts_probability = 0, together = 0;
+	cout << "Введите вероятность появления ресурсозатратной задачи x. " << 0 << " <= x <= " << 1 << " : ";
+	do {
+		cin >> large_cores_probability;
+	} while (large_cores_probability < 0 || large_cores_probability > 1);
+	cout << "Введите вероятность появления продожительной задачи x. " << 0 << " <= x <= " << 1 << " : ";
+	do {
+		cin >> large_tacts_probability;
+	} while (large_tacts_probability < 0 || large_tacts_probability > 1);
+	together = large_cores_probability * large_tacts_probability;
 
 	cout << "Нажмите любую клавишу чтобы прервать работу кластера и получить статистику." << endl;
 	Cluster cluster(cores, priority, tacts);
@@ -55,17 +66,22 @@ int main()
 			cluster.Stop();
 			break;
 		}
+		cout << "На " << i + 1 << "-ом такте: ";
 		vector<Task> new_tasks;
 		int count = rand() % 10;
+		cout << "полученно " << count << ", ";
 		for (int i = 0; i < count; i++)
 		{
-			int _cores = rand() % (core_with_max_size * size_cluster) + 1;
-			int _tacts = rand() % (tacts) + 1;
+			double probability = double(rand()) / RAND_MAX;
+			int _cores, _tacts;
+			_cores = (probability > 1 - large_cores_probability || probability < together) ?
+				rand() % (max_size - 1) + max_size / 2 : rand() % (core_with_max_size) + 1;
+			_tacts = (probability < large_tacts_probability || probability > 1 - together) ?
+				rand() % (max_tacts - min_tacts) + min_tacts : rand() % (min_tacts / 10) + 1;
 			int _priority = rand() % priority;
 			Task another_task(i, _cores, _tacts, _priority);
 			new_tasks.push_back(another_task);
 		}
-		cout << "На " << i + 1 << "-ом такте: ";
 		cout << "отклонено " << cluster.SetTasks(new_tasks) << " и ";
 		cout << "выполнено " << cluster.RunTact() << " задач." <<endl;
 		Sleep(50);

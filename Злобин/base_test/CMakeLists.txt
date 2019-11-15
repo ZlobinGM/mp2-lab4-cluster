@@ -1,4 +1,4 @@
-set(target postfix_test)
+set(target cluster_test)
 
 #file(GLOB hdrs "*.h*" "../base/*.h" "../gtest/*.h")
 file(GLOB hdrs "*.h*")
