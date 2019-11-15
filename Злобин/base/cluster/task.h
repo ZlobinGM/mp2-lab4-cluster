@@ -10,8 +10,10 @@ class Task
 	int cores;					// сколько ядер нужно на выполнение зада
 	int tacts;					// сколько тактов будет выполняться
 public:
-	Task(int _create_time,int _cores, int _tacts, int _priority) : index(++count_of_tasks), 
+	Task(int _create_time = 0, int _cores = 0, int _tacts = 0, int _priority = 0) : index(++count_of_tasks),
 		create_time(_create_time), priority(_priority), cores(_cores), tacts(_tacts) {}
+	Task(const Task& _task) : index(_task.index), create_time(_task.create_time), priority(_task.priority),
+		cores(_task.cores), tacts(_task.tacts) {}
 
 	int GetIndex() { return index; }
 	int GetCreateTime() { return create_time; }

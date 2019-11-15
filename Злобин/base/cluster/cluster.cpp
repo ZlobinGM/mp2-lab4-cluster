@@ -22,7 +22,7 @@ int Cluster::NoMoreActual()
 void Cluster::SetTasksInProgress()
 {
 	if (free_cores == 0)return;
-	for (int i = 0; i < tasks.size; i++)
+	for (int i = 0; i < tasks.size(); i++)
 	{
 		if (!tasks[i].IsEmpty() && tasks[i].Begin().GetCores() > free_cores)
 			return;
@@ -30,13 +30,13 @@ void Cluster::SetTasksInProgress()
 			while (!tasks[i].IsEmpty() && tasks[i].Begin().GetCores() <= free_cores)
 			{
 				Task tmp = tasks[i].Pop();
-				tasks_in_progress.push_back(tmp);
 				free_cores -= tmp.GetCores();
-				for each (Computer comp in cluster)
+				for (int j = 0; j < comp_cluster.size(); j++)
 				{
 					if (tmp.GetCores() == 0) break;
-					comp.LoudUpCores(tmp);
+					comp_cluster.at(j).LoudUpCores(tmp);
 				}
+				tasks_in_progress.push_back(tmp);
 			}
 	}
 }
@@ -47,11 +47,14 @@ total_cores(0), total_tacts(_total_tacts), current_tact(0)
 	for each (int cores in _cores_of_computers)
 	{
 		total_cores += cores;
-		cluster.push_back(Computer(cores));
+		Computer comp(cores);
+		comp_cluster.push_back(comp);
 	}
 	free_cores = total_cores;
-	for (int i = 0; i < _priorities; i++)
-		tasks.push_back(TQueue<Task>(EachQueueSize));
+	for (int i = 0; i < _priorities; i++) {
+		TQueue<Task> queue_of_same_priority_tasks(EachQueueSize);
+		tasks.push_back(queue_of_same_priority_tasks);
+	}
 }
 
 int Cluster::SetTasks(vector<Task> _tasks)
@@ -78,15 +81,14 @@ int Cluster::SetTasks(vector<Task> _tasks)
 int Cluster::RunTact()
 {
 	int completed_on_tact = 0;
-	for (int i = 0; i < tasks_in_progress.size(); i++)
+	for (int i = tasks_in_progress.size() - 1; i >= 0; i--)
 	{
 		tasks_in_progress.at(i).ChangeTacts();
-		if (tasks_in_progress.at(i).GetTacts() == 0) {
-			for each (Computer comp in cluster)
-				free_cores += comp.FreeCoresOff(tasks_in_progress.at(i));
+		if (tasks_in_progress.at(i).GetTacts() <= 0) {
+			for (int j = 0; j < comp_cluster.size(); j++)
+				free_cores += comp_cluster.at(j).FreeCoresOff(tasks_in_progress.at(i));
 			tasks_in_progress.erase(tasks_in_progress.begin() + i);
 			completed_on_tact++;
-			i--;
 		}
 	}
 	current_tact++;
@@ -97,7 +99,7 @@ int Cluster::RunTact()
 int Cluster::Stop()
 {
 	uncompleted = tasks_in_progress.size();
-	cluster.erase(cluster.begin(), cluster.end());
+	comp_cluster.erase(comp_cluster.begin(), comp_cluster.end());
 	tasks.erase(tasks.begin(), tasks.end());
 	tasks_in_progress.erase(tasks_in_progress.begin(), tasks_in_progress.end());
 	return uncompleted;

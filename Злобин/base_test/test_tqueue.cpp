@@ -77,7 +77,7 @@ TEST(TQueue, can_pop_from_reuse_space_of_queue)
 	qu.Push(5);
 	qu.Pop();
 
-	ASSERT_NO_THROW(qu.Pop);
+	ASSERT_NO_THROW(qu.Pop());
 }
 
 TEST(TQueue, can_get_length)
@@ -111,7 +111,7 @@ TEST(TQueue, can_get_end_of_queue)
 	qu.Push(1);
 	qu.Push(2);
 
-	EXPECT_EQ(1, qu.End());
+	EXPECT_EQ(2, qu.End());
 }
 
 TEST(TQueue, throw_when_get_end_from_empty_queue)

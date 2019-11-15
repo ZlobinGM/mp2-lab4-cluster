@@ -13,7 +13,7 @@ const int EachQueueSize = 20;
 
 class Cluster
 {
-	vector<Computer> cluster;						// кластер
+	vector<Computer> comp_cluster;						// кластер
 	vector<TQueue<Task>> tasks;						// вектор очередей, для приоритета заданий
 	vector<Task> tasks_in_progress;					// выполняющиеся на кластере
 
@@ -36,7 +36,7 @@ public:
 	int Stop();										// остановка программы до естественного завершения
 
 	int GetCompleted() { return completed; }
-	int GetUncompleted() { return completed; }
+	int GetUncompleted() { return uncompleted; }
 	int GetRefused() { return refused; }
 };
 

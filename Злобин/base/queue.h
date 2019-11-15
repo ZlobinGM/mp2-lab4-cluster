@@ -4,13 +4,13 @@
 #include "stack.h"
 
 template <class T>
-class TQueue : public TStack
+class TQueue : public TStack<T>
 {
 	int bottom;
 	int length;
 public:
 	TQueue(int _size) : TStack(_size), bottom(0), length(0) {}
-	~TQueue() { delete[] pMem; }
+	TQueue(const TQueue& _qu) : TStack(_qu.size), bottom(_qu.bottom), length(_qu.length) {}
 
 	bool IsEmpty(void) const { return length == 0; }
 	bool IsFull(void) const { return length == size; }
@@ -25,7 +25,7 @@ public:
 		if (IsEmpty()) throw "queue_is_empty";
 		int tmp = bottom++;
 		bottom = bottom % size;
-		length++;
+		length--;
 		return pMem[tmp];
 	}
 	virtual T Begin(void) {

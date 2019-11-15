@@ -6,6 +6,7 @@ const int MaxStackSize = 100;
 template <class T>
 class TStack
 {
+protected:
   T *pMem;
   int size;
   int top;

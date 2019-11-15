@@ -7,11 +7,15 @@ class Computer
 {
 	int cores;						// сколько ядер
 	int free_cores;					// сколько ядер свободно
-	int* tasks_in_progress;			// какие задачи выполняются
+	int *tasks_in_progress;			// какие задачи выполняются
 public:
 	Computer(int _cores = 1) :cores(_cores), free_cores(_cores) {
-		tasks_in_progress = new int[_cores];
-		for (int i = 0; i < _cores; i++) tasks_in_progress[i] = 0;
+		tasks_in_progress = new int[cores];
+		for (int i = 0; i < cores; i++) tasks_in_progress[i] = 0;
+	}
+	Computer(const Computer& _comp) :cores(_comp.cores), free_cores(_comp.free_cores) {
+		tasks_in_progress = new int[cores];
+		for (int i = 0; i < cores; i++) tasks_in_progress[i] = _comp.tasks_in_progress[i];
 	}
 	~Computer() { delete[] tasks_in_progress; }
 
