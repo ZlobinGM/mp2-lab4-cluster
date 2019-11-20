@@ -24,7 +24,13 @@
     <ClCompile Include="test_tqueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test_tcluster.cpp">
+    <ClCompile Include="test_computer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_cluster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test_task.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,0 +1,49 @@
+#ifndef __COMPUTER_H__
+#define __COMPUTER_H__
+
+#include "task.h"
+
+class Computer
+{
+	int cores;						// сколько ядер
+	int free_cores;					// сколько ядер свободно
+	int *tasks_in_progress;			// какие задачи выполняются
+public:
+	Computer(int _cores = 1) :cores(_cores), free_cores(_cores) {
+		tasks_in_progress = new int[cores];
+		for (int i = 0; i < cores; i++) tasks_in_progress[i] = 0;
+	}
+	Computer(const Computer& _comp) :cores(_comp.cores), free_cores(_comp.free_cores) {
+		tasks_in_progress = new int[cores];
+		for (int i = 0; i < cores; i++) tasks_in_progress[i] = _comp.tasks_in_progress[i];
+	}
+	~Computer() { delete[] tasks_in_progress; }
+
+	int GetCores() { return cores; }
+	int GetFreeCores() { return free_cores; }
+	void LoudUpCores(Task& _task) {					// поставить задачу на выполнение
+		for (int i = 0; i < cores; i++)
+		{
+			if (!(_task.GetCores() && free_cores)) return;
+			if (tasks_in_progress[i] == 0) {
+				tasks_in_progress[i] = _task.GetIndex();
+				_task.ChangeCores();
+				free_cores--;
+			}
+		}
+	}
+	int FreeCoresOff(Task& _task) {					// освободить ядра, выполнявшие полученную задачу 
+		int cores_are_free = 0;
+		for (int i = 0; i < cores; i++)
+		{
+			if (tasks_in_progress[i] == _task.GetIndex()) {
+				tasks_in_progress[i] = 0;
+				free_cores++;
+				cores_are_free++;
+			}
+		}
+		return cores_are_free;
+	}
+};
+
+#endif
