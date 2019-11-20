@@ -19,7 +19,7 @@ int main()
 		cin >> size_cluster;
 	} while (size_cluster < 1 || size_cluster > max_size);
 
-	int _tmp, core_with_max_size = 0;
+	int _tmp, core_with_max_size = 0, total_cores_in_cluster = 0;
 	vector<int> cores;
 	for (int i = 0; i < size_cluster; i++)
 	{
@@ -29,6 +29,7 @@ int main()
 			cin >> _tmp;
 		} while (_tmp < 1 || _tmp > max_size);
 		cores.push_back(_tmp);
+		total_cores_in_cluster += _tmp;
 		core_with_max_size = _tmp > core_with_max_size ? _tmp : core_with_max_size;
 	}
 
@@ -56,6 +57,7 @@ int main()
 	together = large_cores_probability * large_tacts_probability;
 
 	cout << "Нажмите любую клавишу чтобы прервать работу кластера и получить статистику." << endl;
+	int total_load_cores = 0;
 	Cluster cluster(cores, priority, tacts);
 	srand(time(NULL));
 	for (int i = 0; i < tacts; i++)
@@ -64,6 +66,7 @@ int main()
 		{
 			_getch();
 			cluster.Stop();
+			tacts = i + 1;
 			break;
 		}
 		cout << "На " << i + 1 << "-ом такте: ";
@@ -84,11 +87,15 @@ int main()
 		}
 		cout << "отклонено " << cluster.SetTasks(new_tasks) << " и ";
 		cout << "выполнено " << cluster.RunTact() << " задач." <<endl;
+		total_load_cores += total_cores_in_cluster - cluster.GetFreeCores();
 		Sleep(50);
 	}
 
 	cout << endl << "Статистика: " << cluster.GetCompleted() << " выполненных, " << cluster.GetRefused() << " отклоненных, "
 		<< cluster.GetUncompleted() << " незавершенных" << " задач." << endl;
+
+	double median_load_in_percents = 100.0 * total_load_cores / total_cores_in_cluster / tacts;
+	cout << "Средняя загрузка кластера: " << median_load_in_percents << "% ." << endl;
 
 	return 0;
 }

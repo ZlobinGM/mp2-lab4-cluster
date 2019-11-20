@@ -36,6 +36,7 @@ public:
 	int RunTact();									// пройти 1 такт
 	int Stop();										// остановка программы до естественного завершения
 
+	int GetFreeCores() { return free_cores; }
 	int GetCompleted() { return completed; }
 	int GetUncompleted() { return uncompleted; }
 	int GetRefused() { return refused; }
